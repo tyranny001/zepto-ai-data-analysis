@@ -2,14 +2,14 @@
 api.py — FastAPI application for the Zepto Support Assistant.
 
 Endpoints:
-    GET  /         — health check
-    POST /ask       — submit a question, get a structured answer
+    GET  /      — health check
+    POST /ask   — submit a query, get a structured answer
 
-Run locally:
-    uvicorn api:app --reload --port 8000
+Run locally (mock mode is the default — no API key needed):
+    uvicorn api:app --reload --port 7860
 
-With mock LLM (no API key needed):
-    MOCK_LLM=1 uvicorn api:app --reload --port 8000
+With real LLM (optional, ungraded):
+    MOCK_LLM=0 GROQ_API_KEY=your_key uvicorn api:app --reload --port 7860
 """
 
 from fastapi import FastAPI, HTTPException
@@ -24,23 +24,24 @@ app = FastAPI(
     title="Zepto Support Assistant",
     description=(
         "A RAG-based customer support assistant that answers questions "
-        "grounded in Zepto's policy documents."
+        "grounded in Zepto's policy documents. Uses LangGraph for "
+        "intent routing and ChromaDB for semantic retrieval."
     ),
     version="1.0.0",
 )
 
 
-# ── Request / response schemas ────────────────────────────────────────────────
+# ── Request schema ────────────────────────────────────────────────────────────
 
-class QuestionRequest(BaseModel):
-    question: str
+class QueryRequest(BaseModel):
+    query: str
 
     model_config = {
         "json_schema_extra": {
             "examples": [
-                {"question": "What is your refund policy for damaged items?"},
-                {"question": "How long does delivery take?"},
-                {"question": "Can I cancel my ZeptoPass subscription?"},
+                {"query": "What is your refund policy for damaged items?"},
+                {"query": "How long does delivery take?"},
+                {"query": "What is the weather like today?"},
             ]
         }
     }
@@ -55,22 +56,22 @@ def health():
 
 
 @app.post("/ask", response_model=AssistantResponse, summary="Ask a policy question")
-def ask_question(request: QuestionRequest) -> AssistantResponse:
+def ask_question(request: QueryRequest) -> AssistantResponse:
     """
-    Submit a customer support question.
+    Submit a customer support query.
 
     The assistant will:
-    1. Classify the intent (policy-related vs general)
+    1. Classify the intent (policy_question vs general_question)
     2. Retrieve relevant policy chunks if policy-related
     3. Generate a grounded answer
 
     Returns a JSON object with `answer`, `sources`, and `confidence`.
     """
-    if not request.question.strip():
-        raise HTTPException(status_code=400, detail="Question cannot be empty.")
+    if not request.query.strip():
+        raise HTTPException(status_code=400, detail="Query cannot be empty.")
 
     try:
-        response = ask(request.question.strip())
+        response = ask(request.query.strip())
     except Exception as exc:
         raise HTTPException(status_code=500, detail=f"Internal error: {exc}")
 

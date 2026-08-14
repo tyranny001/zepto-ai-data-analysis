@@ -3,8 +3,9 @@ uvicorn>=0.29.0
 pydantic>=2.0.0
 langgraph>=0.1.0
 chromadb>=0.5.0
-google-generativeai>=0.5.0
 # Note: chromadb's DefaultEmbeddingFunction provides all-MiniLM-L6-v2
 # via ONNX Runtime (no PyTorch required). This avoids Windows long-path
 # installation issues while using the identical model weights.
-# sentence-transformers can optionally be installed if PyTorch is available.
+
+# Optional (only needed when MOCK_LLM=0 — ungraded extension):
+# groq

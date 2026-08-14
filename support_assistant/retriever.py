@@ -39,6 +39,7 @@ def retrieve(query: str, top_k: int = TOP_K) -> list[dict]:
     (all-MiniLM-L6-v2 via ONNX Runtime — same model as sentence-transformers).
 
     Returns a list of dicts, each with:
+        id:       str   — the chunk ID (e.g. "doc_01_chunk_0")
         document: str   — the chunk text
         source:   str   — the source filename
         distance: float — cosine distance (lower = more similar)
@@ -52,12 +53,14 @@ def retrieve(query: str, top_k: int = TOP_K) -> list[dict]:
     )
 
     chunks = []
-    for doc, meta, dist in zip(
+    for chunk_id, doc, meta, dist in zip(
+        results["ids"][0],
         results["documents"][0],
         results["metadatas"][0],
         results["distances"][0],
     ):
         chunks.append({
+            "id":       chunk_id,
             "document": doc,
             "source":   meta["source"],
             "distance": round(float(dist), 4),

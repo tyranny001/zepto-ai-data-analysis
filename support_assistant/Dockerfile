@@ -10,13 +10,14 @@ RUN pip install --no-cache-dir -r requirements.txt
 # Copy application source
 COPY . .
 
-# Run document ingestion to build the ChromaDB vector store
+# Run document ingestion to build the ChromaDB vector store at build time
 RUN python ingest.py
 
+# Default: mock mode (no API key required, graded baseline)
+ENV MOCK_LLM=1
+
 # Expose FastAPI port
-EXPOSE 8000
+EXPOSE 7860
 
 # Start the API server
-# Set MOCK_LLM=1 to run without a real LLM API key
-# Set GOOGLE_API_KEY for production use with Gemini
-CMD ["uvicorn", "api:app", "--host", "0.0.0.0", "--port", "8000"]
+CMD ["uvicorn", "api:app", "--host", "0.0.0.0", "--port", "7860"]

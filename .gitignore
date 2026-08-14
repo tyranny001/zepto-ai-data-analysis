@@ -32,3 +32,5 @@ support_assistant/chroma_db/
 
 # Large model files (tracked separately)
 # analytics/models/*.joblib  ← keep this tracked, it's a required deliverable
+
+data_pipeline/books.db
