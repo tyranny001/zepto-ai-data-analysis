@@ -7,8 +7,8 @@ Zepto Data & AI Platform is an end-to-end Artificial Intelligence and Machine Le
 | Module | Status | Marks |
 | ------- | ------ | ----- |
 | Data Pipeline | ✅ Complete | 25 |
-| Analytics | 🚧 In Progress | 50 |
-| Support Assistant | 🚧 In Progress | 25 |
+| Analytics | ✅ Complete | 50 |
+| Support Assistant | ✅ Complete | 25 |
 
 ---
 
