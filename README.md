@@ -154,6 +154,6 @@ Git is managed using a feature branch workflow:
 
 ## Author
 
-**Choppa Bharath Kumar**
+**ravitendulkar**
 
 Artificial Intelligence and Machine Learning Capstone Project
